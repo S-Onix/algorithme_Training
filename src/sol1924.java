@@ -21,16 +21,17 @@ public class sol1924 {
 
 		int count = 0;
 		
-		if(tempArray[0] %2 == 1) {
-			if(tempArray[0] > 2)
-				count = ((tempArray[0]/2) * 31) + (((tempArray[0]/2) - 1) * 30) + 28 + tempArray[1];
-			else
-				count = tempArray[1];
-		}else {
+		if(tempArray[0] %2 == 0) {
 			if(tempArray[0] > 2) 
 				count = ((tempArray[0]/2) * 31) + (((tempArray[0]/2) - 2) * 30) + 28 + tempArray[1];
 			else
 				count = 31 + tempArray[1];
+			
+		}else {
+			if(tempArray[0] > 2)
+				count = ((tempArray[0]/2) * 31) + (((tempArray[0]/2) - 1) * 30) + 28 + tempArray[1];
+			else
+				count = tempArray[1];
 		}
 		
 		System.out.println(dayArray[count%7]);
