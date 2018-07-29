@@ -1,4 +1,4 @@
-package reculsion;
+package recursion;
 
 public class RecursionEx2 {
     public static void main(String [] args){
