@@ -7,7 +7,7 @@ public class stackExLinkedList {
 		private Object data;
 		private Node nextNode;
 
-		Node(Object data) {
+		public Node(Object data) {
 			this.data = data;
 			this.nextNode = null;
 		}
