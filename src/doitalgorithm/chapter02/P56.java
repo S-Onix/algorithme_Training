@@ -1,4 +1,4 @@
-package doitalgorithm.chpater02;
+package doitalgorithm.chapter02;
 
 import java.util.Random;
 

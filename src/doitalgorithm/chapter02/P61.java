@@ -1,4 +1,4 @@
-package doitalgorithm.chpater02;
+package doitalgorithm.chapter02;
 
 public class P61 {
     static int [] swapIndexQ02(int [] array, int index1, int index2){
