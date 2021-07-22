@@ -11,26 +11,27 @@ public class LinkedList_complex_ex<T> {
             this.data = data;
         }
     }
+
     public void addNode(T data) {
-        if(this.head == null) {
+        if (this.head == null) {
             this.head = new Node(data);
         }
         Node node = this.head;
-        while(node.nextNode != null) {
+        while (node.nextNode != null) {
             node = node.nextNode;
         }
         node.nextNode = new Node(data);
     }
 
-    public void addNodeInside(T data, T isData){
+    public void addNodeInside(T data, T isData) {
         Node<T> searchNode = this.searchNode(isData);
 
-        if(searchNode == null) {
+        if (searchNode == null) {
             this.addNode(data);
-        }else {
+        } else {
             /*
-            * 내가 짠 방법 1
-            * */
+             * 내가 짠 방법 1
+             * */
             //Node<T> nextNode = searchNode.nextNode;
             //Node<T> newNode = new Node(data);
 
@@ -44,15 +45,37 @@ public class LinkedList_complex_ex<T> {
         }
     }
 
-    public Node<T> searchNode(T data){
-        if(this.head == null) {
+    public boolean delNode(T isData) {
+        if (this.head == null) {
+            return false;
+        } else {
+            Node node = this.head;
+
+            //삭제해야할 노드가 첫번째인 경우
+            if (node.data == isData) {
+                this.head = this.head.nextNode;
+                return true;
+            }
+            while (node.nextNode != null) {
+                if (node.nextNode.data == isData) {
+                    node.nextNode = node.nextNode.nextNode;
+                    return true;
+                }
+                node = node.nextNode;
+            }
+            return false;
+        }
+    }
+
+    public Node<T> searchNode(T data) {
+        if (this.head == null) {
             return null;
-        }else {
+        } else {
             Node<T> node = this.head;
-            while(node != null) {
-                if(node.data == data){
+            while (node != null) {
+                if (node.data == data) {
                     return node;
-                }else {
+                } else {
                     node = node.nextNode;
                 }
             }
@@ -60,12 +83,12 @@ public class LinkedList_complex_ex<T> {
         }
     }
 
-    public void printAllNode(){
-        if(this.head == null) {
-            return ;
-        }else {
+    public void printAllNode() {
+        if (this.head == null) {
+            return;
+        } else {
             Node<T> node = this.head;
-            while(node.nextNode != null) {
+            while (node.nextNode != null) {
                 node = node.nextNode;
                 System.out.println(node.data);
             }
@@ -83,9 +106,12 @@ public class LinkedList_complex_ex<T> {
 
         System.out.println("=============================");
 
-        linkedListC.addNodeInside(5,2);
+        linkedListC.addNodeInside(5, 2);
         linkedListC.printAllNode();
+        linkedListC.delNode(1);
 
+        System.out.println("=============================");
+        linkedListC.printAllNode();
     }
 }
 
