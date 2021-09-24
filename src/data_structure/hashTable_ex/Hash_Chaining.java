@@ -7,6 +7,8 @@ public class Hash_Chaining {
         this.hashTable = new Slot[size];
     }
 
+    // 링크드리스트 기법을 사용하기 위해 next 라는 Slot  변수가 추가됨
+    // key 값을 넣음으로서 데이터를 찾기에 용이해짐
     public class Slot {
         String key;
         String value;
@@ -23,6 +25,8 @@ public class Hash_Chaining {
         return (int) (key.charAt(0)) % this.hashTable.length;
     }
 
+    // 데이터 저장을 위해서는 링크드 리스트 순회 검색 작업이 필요하다.
+    // Slot의 key 값을 통해 데이터의 일치 여부 판단
     public boolean saveData(String key, String value) {
         int address = hash_function(key);
         if (this.hashTable[address] != null) {
