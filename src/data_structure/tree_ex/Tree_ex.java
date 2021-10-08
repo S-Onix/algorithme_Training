@@ -1,197 +1,228 @@
 package data_structure.tree_ex;
 
 public class Tree_ex {
+
+    /**
+     * 트리의 시작지점을 나타내야한다.
+     */
     Node head = null;
 
     public class Node {
+        Node left;
+        Node right;
         Integer value;
-        Node leftNode;
-        Node rightNode;
 
-        public Node(Integer data) {
-            this.value = data;
-            this.leftNode = null;
-            this.rightNode = null;
+        public Node(Integer value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
         }
     }
 
+    /**
+     * 트리를 등록시켜줘야하는데
+     * 1. 아직 트리에 노드가 없는경우
+     * - 등록되는 노드가 head가 된다.
+     * 2. 트리에 노드가 있는 경우
+     * - 등록될 노드의 값에 따라 넣어줄 위치를 지정해준다.
+     */
     public boolean insert(Integer data) {
-        //Case 1: 노드가 하나도 없을 경우
-        if (head == null) {
+        if (this.head == null) {
             this.head = new Node(data);
+            return true;
         } else {
-            Node findNode = this.head;
+            Node searchNode = this.head;
             while (true) {
-                //Case 2 : parent 노드보다 값이 클 경우
-                if (data <= findNode.value) {
-                    if (findNode.leftNode != null) {
-                        findNode = findNode.leftNode;
+                if (searchNode.value >= data) {
+                    if (searchNode.left != null) {
+                        searchNode = searchNode.left;
                     } else {
-                        findNode.leftNode = new Node(data);
+                        searchNode.left = new Node(data);
                         break;
                     }
-                }
-                //Case 3 : parent 노드보다 값이 작을 경우
-                else {
-                    if (findNode.rightNode != null) {
-                        findNode = findNode.rightNode;
+                } else {
+                    if (searchNode.right != null) {
+                        searchNode = searchNode.right;
                     } else {
-                        findNode.rightNode = new Node(data);
+                        searchNode.right = new Node(data);
                         break;
                     }
                 }
             }
+            return true;
         }
-        return true;
     }
+
+    /**
+     * 특정 노드를 찾는법
+     * 전제조건 : 트리에 노드가 있는가 없는가
+     * <p>
+     * 1. 찾고자 하는 노드가 있을경우
+     * 해당 노드 리턴
+     * 2. 찾고자 하는 노드가 없을 경우
+     * null 리턴
+     */
 
     public Node searchNode(Integer data) {
         if (this.head == null) {
             return null;
         } else {
-            Node searchNode = this.head;
-
-            while (searchNode != null) {
-                if (searchNode.value == data) {
-                    return searchNode;
+            Node findNode = this.head;
+            while (findNode != null) {
+                if (findNode.value == data) {
+                    return findNode;
+                } else if (findNode.value > data) {
+                    findNode = findNode.left;
                 } else {
-                    if (searchNode.value >= data) {
-                        searchNode = searchNode.leftNode;
-                    } else {
-                        searchNode = searchNode.rightNode;
-                    }
+                    findNode = findNode.right;
                 }
             }
             return null;
         }
     }
 
-    public boolean removeNode(Integer data) {
-        /**
-         * case 1. 비어있는 경우
-         * case 2. 노드가 존재하는 경우 >> 어떻게 이어줄 것인가?
-         *      - 가장 마지막에 위치한 노드일 경우 (leaf Node)
-         *      - 자식 Node 가 한개인 경우
-         *          - 자식 노드를 삭제하고자 하는 노드의 부모와 이어준다.
-         *      - 자식 Node 가 두개인 경우
-         *          - 오른쪽 자식 노드가 root 가 되는 트리의 가장 작은 값을 올려준다.
-         * */
-
-        Node searchNode = this.head;
-        Node parentNode = this.head;
-
-        if(this.head == null) {
+    /**
+     * 트리에 노드가 없는 경우
+     * 트리에 노드가 있는 경우
+     * 제거하고자 하는 노드의 자식이 있는 경우
+     *  - 자식 노드가 하나인 경우
+     *      - 자식 노드를 제거하고자 하는 노드의 위치로 끌어올린다.
+     *  - 자식 노드가 두개인 경우
+     *       - 제거하고자하는 노드의 오른쪽 자식 트리 중 가장 작은 값을 제거하고자하는 노드의 위치로 끌어 올린다
+     *          >> 루트의 오른쪽 트리의 가작 작은 값은 왼쪽 트리의 값들 보다 큼 따라서 이진트리의 법칙이 성립됨
+     * 제거하고자 하는 노드의 자식이 없는 경우
+     *  - 해당 노드를 삭제한다(부모의 관계를 끊어준다. >> 이후 할일을 gc가 해줌)
+     */
+    public boolean delete(Integer data) {
+        if (this.head == null) {
             return false;
-        }else {
+        } else {
+            Node parentNode = this.head;
+            Node searchNode = this.head;
 
-
-            boolean searched = false;
-
-            if(searchNode.value == data && searchNode.leftNode == null && searchNode.rightNode == null) {
+            /**
+             * 간과하지 말아야할 코너 케이스
+             * 노드가 한개만 존재하는 경우 (head인 경우)
+             * */
+            if(this.head.value == data && this.head.left == null && this.head.right == null) {
                 this.head = null;
                 return true;
             }
 
-            while(searchNode != null) {
-                if(searchNode.value == data) {
-                    searched = true;
+            /**
+             * 제거하고자하는 노드의 위치를 찾아준다.
+             * */
+            while (searchNode != null) {
+                if (searchNode.value == data) {
                     break;
-                }else if(data <= searchNode.value){
+                } else if (searchNode.value > data) {
                     parentNode = searchNode;
-                    searchNode = searchNode.leftNode;
-                }else {
+                    searchNode = searchNode.left;
+                } else {
                     parentNode = searchNode;
-                    searchNode = searchNode.rightNode;
+                    searchNode = searchNode.right;
                 }
             }
 
-            if(!searched) return false;
-
-        }
-        /**
-         * 1. leaf 노드인 경우
-         * 2. 삭제할 Node가 왼쪽 자식 노드만 가지고 있는 경우
-         * 3. 삭제할 Node가 오른쪽 자식 노드만 가지고 있는 경우
-         * 4. 삭제할 Node가 자식 노드를 두개 가지고 있는 경우
-         *  - 삭제할 Node의 오른쪽 트리 중 가장 작은 값을 올려준다.
-         * */
-        if(searchNode.leftNode == null && searchNode.rightNode == null) {
-            if(parentNode.value >= data) {
-                parentNode.leftNode = null;
-                searchNode = null;
-            }else {
-                parentNode.rightNode = null;
-                searchNode = null;
-            }
-            return true;
-        }else if(searchNode.leftNode != null && searchNode.rightNode == null) {
-            if(parentNode.value >= data) {
-                parentNode.leftNode = searchNode.leftNode;
-                searchNode = null;
-            }else {
-                parentNode.rightNode = searchNode.leftNode;
-                searchNode = null;
-            }
-            return true;
-        }else if(searchNode.leftNode == null && searchNode.rightNode != null){
-            if(parentNode.value >= data) {
-                parentNode.leftNode = searchNode.rightNode;
-                searchNode = null;
-            }else {
-                parentNode.rightNode = searchNode.rightNode;
-                searchNode = null;
-            }
-            return true;
-        }else {
-            if (parentNode.value >= data){
+            if (searchNode == null) {
+                return false;
+            } else {
                 /**
-                 * 오른쪽의 트리 중 가장 작은 값을 올린다.
+                 * 1. 자식 노드가 없는 경우
+                 * 2. 자식 노드가 하나인 경우
+                 * 3. 자식 노드가 두개인 경우
                  * */
-                Node minNode = searchNode.rightNode;
-                Node parentMinNode = searchNode.rightNode;
-                while(minNode.leftNode != null) {
-                    parentMinNode = minNode;
-                    minNode = minNode.leftNode;
-                }
-                /**
-                 * 오른쪽에 자식이 있는 경우와 없는 경우를 나눈다.
-                 * */
-                if(minNode.rightNode != null) {
-                    parentMinNode.leftNode = minNode.rightNode;
+                if(searchNode.left == null && searchNode.right == null) {
+                    if(parentNode.value >= data) {
+                        parentNode.left = null;
+                    }else {
+                        parentNode.right = null;
+                    }
+                    searchNode = null;
+                } else if(searchNode.left == null && searchNode.right != null){
+                    if(parentNode.value >= data) {
+                        parentNode.left = searchNode.right;
+                    }else {
+                        parentNode.right = searchNode.right;
+                    }
+                    searchNode = null;
+                }else if (searchNode.left != null && searchNode.right == null) {
+                    if(parentNode.value >= data) {
+                        parentNode.left = searchNode.left;
+                    }else {
+                        parentNode.right = searchNode.left;
+                    }
+                    searchNode = null;
                 }else {
-                    parentMinNode.leftNode = null;
+                    /**
+                     * 오른쪽트리의 순회 작업이 필요하다.
+                     * 그렇다면 오른쪽 트리의 부모 / saerch 노드를 변수로 둬야한다.
+                     * */
+                    Node deleteChildParentNode = searchNode.right;
+                    Node deleteChildSearchNode = searchNode.right;
+
+                    while(deleteChildSearchNode.left != null) {
+                        deleteChildParentNode = deleteChildSearchNode;
+                        deleteChildSearchNode = deleteChildSearchNode.left;
+                    }
+
+                    if(deleteChildSearchNode.right != null) {
+                        deleteChildParentNode.left = deleteChildSearchNode.right;
+                    }else {
+                        deleteChildParentNode.left = null;
+                    }
+
+                    if(parentNode.value >= data) {
+                        /**
+                         * 1. 삭제하고자할 노드의 부모와 이어준다.
+                         * 2. 삭제하고자할 노드의 두 자식을 이어준다.
+                         * */
+                        parentNode.left = deleteChildSearchNode;
+                        deleteChildSearchNode.left = searchNode.left;
+                        deleteChildSearchNode.right = searchNode.right;
+                        searchNode = null;
+
+                    }else {
+                        parentNode.right = deleteChildSearchNode;
+                        deleteChildSearchNode.left = searchNode.left;
+                        deleteChildSearchNode.right = searchNode.right;
+                        searchNode = null;
+                    }
+
                 }
 
-                parentNode.leftNode = minNode;
-                minNode.leftNode = searchNode.leftNode;
-                minNode.rightNode = searchNode.rightNode;
-            }else {
-                /**
-                 * 오른쪽의 트리 중 가장 작은 값을 올린다.
-                 * */
-                Node minNode = searchNode.rightNode;
-                Node parentMinNode = searchNode.rightNode;
-                while(minNode.leftNode != null) {
-                    parentMinNode = minNode;
-                    minNode = minNode.leftNode;
-                }
-                /**
-                 * 오른쪽에 자식이 있는 경우와 없는 경우를 나눈다.
-                 * */
-                if(minNode.rightNode != null) {
-                    parentMinNode.leftNode = minNode.rightNode;
-                }else {
-                    parentMinNode.leftNode = null;
-                }
-
-                parentNode.rightNode = minNode;
-                minNode.leftNode = searchNode.leftNode;
-                minNode.rightNode = searchNode.rightNode;
-
-                searchNode = null;
+                return true;
             }
-            return true;
         }
+    }
+
+    public static void main(String[] args) {
+        // Case3-1: 삭제할 Node가 Child Node를 두 개 가지고 있을 경우
+        Tree_ex myTree = new Tree_ex();
+        myTree.insert(10);
+        myTree.insert(15);
+        myTree.insert(13);
+        myTree.insert(11);
+        myTree.insert(14);
+        myTree.insert(18);
+        myTree.insert(16);
+        myTree.insert(19);
+        myTree.insert(17);
+        myTree.insert(7);
+        myTree.insert(8);
+        myTree.insert(6);
+        System.out.println(myTree.delete(15));
+        System.out.println("HEAD: " + myTree.head.value);
+        System.out.println("HEAD LEFT: " + myTree.head.left.value);
+        System.out.println("HEAD LEFT LEFT: " + myTree.head.left.left.value);
+        System.out.println("HEAD LEFT RIGHT: " + myTree.head.left.right.value);
+
+        System.out.println("HEAD RIGHT: " + myTree.head.right.value);
+        System.out.println("HEAD RIGHT LEFT: " + myTree.head.right.left.value);
+        System.out.println("HEAD RIGHT RIGHT: " + myTree.head.right.right.value);
+
+        System.out.println("HEAD RIGHT RIGHT LEFT: " + myTree.head.right.right.left.value);
+        System.out.println("HEAD RIGHT RIGHT RIGHT: " + myTree.head.right.right.right.value);
     }
 
 }
