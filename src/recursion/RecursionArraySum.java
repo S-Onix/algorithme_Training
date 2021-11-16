@@ -1,6 +1,7 @@
 package recursion;
 
-public class RecursionArraySum {
+public class
+RecursionArraySum {
 	public int sum(int[] array, int index) {
 		if(index == 0) {
 			return array[0];
