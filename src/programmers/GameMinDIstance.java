@@ -1,4 +1,4 @@
-package algorithm_fc.graph;
+package programmers;
 
 import java.util.LinkedList;
 
