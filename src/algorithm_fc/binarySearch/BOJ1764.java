@@ -1,4 +1,4 @@
-package algorithm_fc.binarySearch;
+package src.algorithm_fc.binarySearch;
 
 import java.io.*;
 import java.util.Arrays;

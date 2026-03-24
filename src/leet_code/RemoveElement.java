@@ -1,4 +1,4 @@
-package leet_code;
+package src.leet_code;
 
 public class RemoveElement {
 
